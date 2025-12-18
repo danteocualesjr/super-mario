@@ -35,11 +35,11 @@ class Player {
         // Handle input
         this.isMoving = false;
         
-        if (keys['ArrowLeft'] || keys['a'] || keys['A']) {
+        if (keys['ArrowLeft'] || keys['a'] || keys['A'] || keys['KeyA']) {
             this.velocityX = -this.speed;
             this.facingRight = false;
             this.isMoving = true;
-        } else if (keys['ArrowRight'] || keys['d'] || keys['D']) {
+        } else if (keys['ArrowRight'] || keys['d'] || keys['D'] || keys['KeyD']) {
             this.velocityX = this.speed;
             this.facingRight = true;
             this.isMoving = true;
@@ -47,14 +47,14 @@ class Player {
             physics.applyFriction(this);
         }
 
-        if ((keys['ArrowUp'] || keys['w'] || keys['W'] || keys[' ']) && this.onGround) {
+        if ((keys['ArrowUp'] || keys['w'] || keys['W'] || keys['KeyW'] || keys[' '] || keys['Space']) && this.onGround) {
             this.velocityY = this.jumpPower;
             this.onGround = false;
             if (audio) audio.playJump();
         }
 
         // Fireball shooting
-        if ((keys['x'] || keys['X']) && this.powerState === 'fire' && this.canShoot && this.shootCooldown <= 0) {
+        if ((keys['x'] || keys['X'] || keys['KeyX']) && this.powerState === 'fire' && this.canShoot && this.shootCooldown <= 0) {
             this.shootFireball(audio);
             this.shootCooldown = 20;
         }

@@ -40,24 +40,49 @@ class Game {
     }
 
     init() {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:init',message:'init() called',data:{gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        
+        // Click handler to focus canvas
+        this.canvas.addEventListener('click', () => {
+            this.canvas.focus();
+        });
+
         // Keyboard event listeners
         window.addEventListener('keydown', (e) => {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:keydown',message:'keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState,keyLength:e.key?e.key.length:0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
+            // #endregion
+            
+            const key = e.key || e.code;
             this.keys[e.key] = true;
+            this.keys[e.code] = true; // Also track by code for Mac compatibility
             
             // Prevent default for game controls
-            if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
+            if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
                 e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                 e.preventDefault();
             }
             
             if (this.gameState === 'menu') {
-                if (e.key === ' ' || e.key === 'Enter') {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:menu-check',message:'gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space',enterMatch:e.key==='Enter'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch(()=>{});
+                // #endregion
+                
+                if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:start-trigger',message:'start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch(()=>{});
+                    // #endregion
+                    
                     e.preventDefault();
+                    e.stopPropagation();
                     this.startGame();
                 }
             } else if (this.gameState === 'gameOver') {
-                if (e.key === ' ' || e.key === 'Enter') {
+                if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
                     e.preventDefault();
+                    e.stopPropagation();
                     this.restartGame();
                 }
             } else if (this.gameState === 'playing') {
@@ -70,11 +95,55 @@ class Game {
                     e.preventDefault();
                     this.togglePause();
                 }
+            } else {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:other-state',message:'keydown in non-menu state',data:{gameState:this.gameState,key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                // #endregion
             }
         });
 
         window.addEventListener('keyup', (e) => {
             this.keys[e.key] = false;
+            this.keys[e.code] = false;
+        });
+
+        // Also listen on document for better Mac compatibility
+        document.addEventListener('keydown', (e) => {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-keydown',message:'document keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            
+            const key = e.key || e.code;
+            this.keys[e.key] = true;
+            this.keys[e.code] = true;
+            
+            // Prevent default for game controls
+            if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
+                e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+            }
+            
+            if (this.gameState === 'menu') {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-menu-check',message:'document: gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch(()=>{});
+                // #endregion
+                
+                if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-start-trigger',message:'document: start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch(()=>{});
+                    // #endregion
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.startGame();
+                }
+            } else if (this.gameState === 'gameOver') {
+                if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.restartGame();
+                }
+            }
         });
 
         // Handle window resize
@@ -82,11 +151,22 @@ class Game {
             this.setCanvasSize();
         });
 
+        // Focus canvas when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                this.canvas.focus();
+            }, 100);
+        });
+
         // Start game loop
         this.gameLoop(0);
     }
 
     startGame() {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:startGame',message:'startGame() called',data:{previousState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+        // #endregion
+        
         this.gameState = 'playing';
         this.score = 0;
         this.lives = 3;
@@ -320,6 +400,10 @@ class Game {
 
 // Initialize game when page loads
 window.addEventListener('load', () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:load',message:'window load event fired, creating Game',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    
     new Game();
 });
 
