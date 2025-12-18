@@ -41,18 +41,26 @@ class Game {
 
     init() {
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:init',message:'init() called',data:{gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        console.log('[DEBUG] init() called, gameState:', this.gameState);
+        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:init',message:'init() called',data:{gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
         // #endregion
         
         // Click handler to focus canvas
         this.canvas.addEventListener('click', () => {
+            console.log('[DEBUG] Canvas clicked, focusing...');
             this.canvas.focus();
+            console.log('[DEBUG] Canvas focused, document.activeElement:', document.activeElement);
         });
+        
+        // Test: Log canvas focus state
+        console.log('[DEBUG] Canvas tabindex:', this.canvas.getAttribute('tabindex'));
+        console.log('[DEBUG] Initial document.activeElement:', document.activeElement);
 
         // Keyboard event listeners
         window.addEventListener('keydown', (e) => {
             // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:keydown',message:'keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState,keyLength:e.key?e.key.length:0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
+            console.log('[DEBUG] keydown event:', {key: e.key, code: e.code, gameState: this.gameState, keyLength: e.key ? e.key.length : 0});
+            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:keydown',message:'keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState,keyLength:e.key?e.key.length:0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
             // #endregion
             
             const key = e.key || e.code;
@@ -67,12 +75,14 @@ class Game {
             
             if (this.gameState === 'menu') {
                 // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:menu-check',message:'gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space',enterMatch:e.key==='Enter'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch(()=>{});
+                console.log('[DEBUG] gameState is menu, checking key:', {key: e.key, code: e.code, keyMatch: e.key === ' ', codeMatch: e.code === 'Space', enterMatch: e.key === 'Enter'});
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:menu-check',message:'gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space',enterMatch:e.key==='Enter'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
                 // #endregion
                 
                 if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
                     // #region agent log
-                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:start-trigger',message:'start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch(()=>{});
+                    console.log('[DEBUG] START CONDITION MATCHED! Calling startGame()');
+                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:start-trigger',message:'start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
                     // #endregion
                     
                     e.preventDefault();
@@ -97,7 +107,8 @@ class Game {
                 }
             } else {
                 // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:other-state',message:'keydown in non-menu state',data:{gameState:this.gameState,key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                console.log('[DEBUG] keydown in non-menu state:', {gameState: this.gameState, key: e.key, code: e.code});
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:other-state',message:'keydown in non-menu state',data:{gameState:this.gameState,key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
                 // #endregion
             }
         });
@@ -110,7 +121,8 @@ class Game {
         // Also listen on document for better Mac compatibility
         document.addEventListener('keydown', (e) => {
             // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-keydown',message:'document keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            console.log('[DEBUG] document keydown event:', {key: e.key, code: e.code, gameState: this.gameState});
+            fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-keydown',message:'document keydown event fired',data:{key:e.key,code:e.code,gameState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
             // #endregion
             
             const key = e.key || e.code;
@@ -125,12 +137,14 @@ class Game {
             
             if (this.gameState === 'menu') {
                 // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-menu-check',message:'document: gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch(()=>{});
+                console.log('[DEBUG] document: gameState is menu, checking key:', {key: e.key, code: e.code, keyMatch: e.key === ' ', codeMatch: e.code === 'Space'});
+                fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-menu-check',message:'document: gameState is menu',data:{key:e.key,code:e.code,keyMatch:e.key===' ',codeMatch:e.code==='Space'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
                 // #endregion
                 
                 if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
                     // #region agent log
-                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-start-trigger',message:'document: start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch(()=>{});
+                    console.log('[DEBUG] document: START CONDITION MATCHED! Calling startGame()');
+                    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:doc-start-trigger',message:'document: start condition matched',data:{key:e.key,code:e.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C,D'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
                     // #endregion
                     
                     e.preventDefault();
@@ -154,9 +168,16 @@ class Game {
         // Focus canvas when page loads
         window.addEventListener('load', () => {
             setTimeout(() => {
+                console.log('[DEBUG] Attempting to focus canvas after load...');
                 this.canvas.focus();
+                console.log('[DEBUG] After focus attempt, document.activeElement:', document.activeElement);
             }, 100);
         });
+        
+        // Test: Add a global keydown listener that ALWAYS fires
+        document.addEventListener('keydown', (e) => {
+            console.log('[DEBUG] GLOBAL keydown listener fired:', {key: e.key, code: e.code, target: e.target, activeElement: document.activeElement});
+        }, true); // Use capture phase
 
         // Start game loop
         this.gameLoop(0);
@@ -164,7 +185,8 @@ class Game {
 
     startGame() {
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:startGame',message:'startGame() called',data:{previousState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+        console.log('[DEBUG] startGame() CALLED! Previous state:', this.gameState);
+        fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:startGame',message:'startGame() called',data:{previousState:this.gameState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
         // #endregion
         
         this.gameState = 'playing';
@@ -401,7 +423,8 @@ class Game {
 // Initialize game when page loads
 window.addEventListener('load', () => {
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:load',message:'window load event fired, creating Game',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    console.log('[DEBUG] window load event fired, creating Game');
+    fetch('http://127.0.0.1:7242/ingest/2e4625ef-98e5-48d8-a7ab-6d4230cfeb2b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'game.js:load',message:'window load event fired, creating Game',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch((err)=>console.error('[DEBUG] Fetch error:', err));
     // #endregion
     
     new Game();
