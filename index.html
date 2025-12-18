@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Retro Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-overlay">
+            <div id="hud">
+                <div class="hud-item">
+                    <span>Score: </span><span id="score">0</span>
+                </div>
+                <div class="hud-item">
+                    <span>Lives: </span><span id="lives">3</span>
+                </div>
+                <div class="hud-item">
+                    <span>Coins: </span><span id="coins">0</span>
+                </div>
+                <div class="hud-item">
+                    <span>Level: </span><span id="level">1</span>
+                </div>
+            </div>
+        </div>
+        <div id="start-screen" class="screen">
+            <h1>Super Mario</h1>
+            <p>Press SPACE or ENTER to Start</p>
+            <p class="controls">Controls: Arrow Keys or WASD to move, SPACE to jump</p>
+        </div>
+        <div id="game-over-screen" class="screen hidden">
+            <h1>Game Over</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <p>Press SPACE or ENTER to Restart</p>
+        </div>
+        <div id="pause-screen" class="screen hidden">
+            <h1>Paused</h1>
+            <p>Press P to Resume</p>
+        </div>
+    </div>
+
+    <script src="js/physics.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/level.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
+
