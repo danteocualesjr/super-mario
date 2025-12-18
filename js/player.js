@@ -31,7 +31,7 @@ class Player {
         this.shootCooldown = 0;
     }
 
-    update(keys, physics, level, deltaTime) {
+    update(keys, physics, level, deltaTime, audio = null) {
         // Handle input
         this.isMoving = false;
         
@@ -50,11 +50,12 @@ class Player {
         if ((keys['ArrowUp'] || keys['w'] || keys['W'] || keys[' ']) && this.onGround) {
             this.velocityY = this.jumpPower;
             this.onGround = false;
+            if (audio) audio.playJump();
         }
 
         // Fireball shooting
         if ((keys['x'] || keys['X']) && this.powerState === 'fire' && this.canShoot && this.shootCooldown <= 0) {
-            this.shootFireball();
+            this.shootFireball(audio);
             this.shootCooldown = 20;
         }
 
@@ -150,13 +151,14 @@ class Player {
         });
     }
 
-    shootFireball() {
+    shootFireball(audio = null) {
         const direction = this.facingRight ? 1 : -1;
         this.fireballs.push(new Fireball(
             this.x + (this.facingRight ? this.width : 0),
             this.y + this.height / 2,
             direction
         ));
+        if (audio) audio.playFireball();
     }
 
     takeDamage() {
