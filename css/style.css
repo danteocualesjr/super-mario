@@ -25,6 +25,7 @@ body {
     display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    outline: none;
 }
 
 #ui-overlay {

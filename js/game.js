@@ -6,6 +6,9 @@ class Game {
         this.ctx = this.canvas.getContext('2d');
         this.setCanvasSize();
         
+        // Focus canvas to receive keyboard events
+        this.canvas.focus();
+        
         this.physics = new Physics();
         this.audio = new AudioManager();
         this.ui = new UIManager();
@@ -41,20 +44,30 @@ class Game {
         window.addEventListener('keydown', (e) => {
             this.keys[e.key] = true;
             
+            // Prevent default for game controls
+            if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
+                e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+            }
+            
             if (this.gameState === 'menu') {
                 if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
                     this.startGame();
                 }
             } else if (this.gameState === 'gameOver') {
                 if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
                     this.restartGame();
                 }
             } else if (this.gameState === 'playing') {
                 if (e.key === 'p' || e.key === 'P') {
+                    e.preventDefault();
                     this.togglePause();
                 }
             } else if (this.gameState === 'paused') {
                 if (e.key === 'p' || e.key === 'P') {
+                    e.preventDefault();
                     this.togglePause();
                 }
             }
